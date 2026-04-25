@@ -22,25 +22,10 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 storage bootstrap/cache
 
-# Nginx config
-RUN echo 'server { \n\
-    listen 80; \n\
-    root /var/www/html/public; \n\
-    index index.php; \n\
-    location / { try_files $uri $uri/ /index.php?$query_string; } \n\
-    location ~ \.php$ { \n\
-        fastcgi_pass 127.0.0.1:9000; \n\
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name; \n\
-        include fastcgi_params; \n\
-    } \n\
-}' > /etc/nginx/sites-available/default
+# Copy startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-EXPOSE 80
+EXPOSE 8080
 
-CMD ["/bin/bash", "-c", "\
-    php artisan key:generate --force 2>/dev/null || true && \
-    php artisan config:cache && \
-    php artisan migrate --force && \
-    php artisan storage:link 2>/dev/null || true && \
-    php-fpm -D && \
-    nginx -g 'daemon off;'"]
+CMD ["/start.sh"]
