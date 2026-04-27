@@ -387,10 +387,12 @@ tbody tr:hover td{background:var(--g1)}
 .fc .fc-day-today{background:var(--blue-light)!important}
 
 /* JAM BADGE */
-.jam-badge { display:flex; align-items:center; gap:4px; font-size:12px; font-weight:600; white-space:nowrap; }
-.jam-start { color:var(--blue-dark); background:var(--blue-light); padding:2px 7px; border-radius:20px; }
-.jam-end   { color:#065f46; background:var(--green-light); padding:2px 7px; border-radius:20px; }
-.jam-arrow { color:var(--g4); font-size:11px; }
+.jam-badge { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.jam-item  { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.jam-keterangan { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--g5); }
+.jam-start { color:var(--blue-dark); background:var(--blue-light); padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700; }
+.jam-end   { color:#fff; background:#ef4444; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:700; }
+.jam-arrow { color:var(--g4); font-size:11px; margin-top:10px; }
 
 /* TUGAS CLOCK SECTION */
 .tugas-clock-section {

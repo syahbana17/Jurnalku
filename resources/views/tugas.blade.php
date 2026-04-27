@@ -159,9 +159,21 @@
           <td>
             @if($t->jam_mulai || $t->jam_selesai)
               <div class="jam-badge">
-                @if($t->jam_mulai)<span class="jam-start">🕐 {{ \Carbon\Carbon::parse($t->jam_mulai)->format('H:i') }}</span>@endif
-                @if($t->jam_mulai && $t->jam_selesai)<span class="jam-arrow">→</span>@endif
-                @if($t->jam_selesai)<span class="jam-end">{{ \Carbon\Carbon::parse($t->jam_selesai)->format('H:i') }}</span>@endif
+                @if($t->jam_mulai)
+                  <div class="jam-item">
+                    <span class="jam-keterangan">Mulai</span>
+                    <span class="jam-start">🕐 {{ \Carbon\Carbon::parse($t->jam_mulai)->format('H:i') }}</span>
+                  </div>
+                @endif
+                @if($t->jam_mulai && $t->jam_selesai)
+                  <span class="jam-arrow">→</span>
+                @endif
+                @if($t->jam_selesai)
+                  <div class="jam-item">
+                    <span class="jam-keterangan">Selesai</span>
+                    <span class="jam-end">🔴 {{ \Carbon\Carbon::parse($t->jam_selesai)->format('H:i') }}</span>
+                  </div>
+                @endif
               </div>
             @else
               <span style="color:var(--g4);font-size:12px">—</span>
