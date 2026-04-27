@@ -94,16 +94,19 @@
 </div>
 
 {{-- Search & Filter --}}
-<div class="card page-section">
-  <form method="GET" action="{{ route('tugas.index') }}" class="filter-row">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="🔍 Cari tugas..." class="search-input">
-    <select name="status" class="filter-select">
+<div class="card page-section" style="padding:14px 20px">
+  <form method="GET" action="{{ route('tugas.index') }}" class="filter-row-compact">
+    <div class="filter-search-wrap">
+      <span style="color:var(--g5);font-size:14px">🔍</span>
+      <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tugas..." class="filter-search-inline">
+    </div>
+    <select name="status" class="filter-select-sm">
       <option value="">Semua Status</option>
       @foreach(['Belum','Sedang Dikerjakan','Selesai'] as $s)
         <option {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
       @endforeach
     </select>
-    <select name="kategori" class="filter-select">
+    <select name="kategori" class="filter-select-sm">
       <option value="">Semua Kategori</option>
       @foreach(['Sekolah','S2','Pribadi'] as $k)
         <option {{ request('kategori') === $k ? 'selected' : '' }}>{{ $k }}</option>
@@ -141,7 +144,17 @@
             @if($isLate)<span class="badge badge-red" style="margin-left:6px;font-size:10px">Terlambat</span>@endif
             @if($isNear)<span class="badge badge-yellow" style="margin-left:6px;font-size:10px">Segera</span>@endif
           </td>
-          <td><span class="badge {{ $t->kategori==='S2'?'badge-blue':($t->kategori==='Pribadi'?'badge-purple':'badge-gray') }}">{{ $t->kategori }}</span></td>
+          <td>
+            @php
+              $katClass = match($t->kategori) {
+                'Sekolah' => 'badge-kat-sekolah',
+                'S2'      => 'badge-kat-s2',
+                'Pribadi' => 'badge-kat-pribadi',
+                default   => 'badge-gray',
+              };
+            @endphp
+            <span class="badge {{ $katClass }}">{{ $t->kategori }}</span>
+          </td>
           <td>{{ $t->deadline->translatedFormat('d M Y') }}</td>
           <td>
             @if($t->jam_mulai || $t->jam_selesai)
