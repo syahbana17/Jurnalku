@@ -29,10 +29,12 @@ class TugasController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama'     => 'required|string',
-            'kategori' => 'required|in:Sekolah,S2,Pribadi',
-            'deadline' => 'required|date',
-            'status'   => 'required|in:Belum,Sedang Dikerjakan,Selesai',
+            'nama'        => 'required|string',
+            'kategori'    => 'required|in:Sekolah,S2,Pribadi',
+            'deadline'    => 'required|date',
+            'jam_mulai'   => 'nullable|date_format:H:i',
+            'jam_selesai' => 'nullable|date_format:H:i',
+            'status'      => 'required|in:Belum,Sedang Dikerjakan,Selesai',
         ]);
 
         $data['user_id'] = Auth::id();

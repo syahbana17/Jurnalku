@@ -5,6 +5,7 @@
 
 @section('content')
 
+{{-- Form Tambah --}}
 <div class="card page-section">
   <div class="card-title">➕ Tambah Tugas Baru</div>
   <form method="POST" action="{{ route('tugas.store') }}">
@@ -31,7 +32,19 @@
         @error('deadline')<span class="field-error">{{ $message }}</span>@enderror
       </div>
     </div>
-    <div class="row-2">
+
+    {{-- Jam Mulai & Selesai --}}
+    <div class="row-3">
+      <div class="form-group">
+        <label>🕐 Jam Mulai</label>
+        <input type="time" name="jam_mulai" value="{{ old('jam_mulai') }}" class="{{ $errors->has('jam_mulai') ? 'err' : '' }}">
+        @error('jam_mulai')<span class="field-error">{{ $message }}</span>@enderror
+      </div>
+      <div class="form-group">
+        <label>🕐 Jam Selesai</label>
+        <input type="time" name="jam_selesai" value="{{ old('jam_selesai') }}" class="{{ $errors->has('jam_selesai') ? 'err' : '' }}">
+        @error('jam_selesai')<span class="field-error">{{ $message }}</span>@enderror
+      </div>
       <div class="form-group">
         <label>Status</label>
         <select name="status">
@@ -40,9 +53,10 @@
           @endforeach
         </select>
       </div>
-      <div style="display:flex;align-items:flex-end;padding-bottom:18px">
-        <button type="submit" class="btn btn-primary" style="width:100%">➕ Tambah Tugas</button>
-      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end">
+      <button type="submit" class="btn btn-primary">➕ Tambah Tugas</button>
     </div>
   </form>
 </div>
@@ -68,27 +82,57 @@
   </form>
 </div>
 
+{{-- Tabel --}}
 <div class="card">
   <div class="card-title">📋 Daftar Tugas <span style="font-weight:500;color:var(--g5);font-size:12px">({{ $tugas->total() }} total)</span></div>
   <div class="tbl-wrap">
     <table>
       <thead>
         <tr>
-          <th>Nama Tugas</th><th>Kategori</th><th>Deadline</th><th>Status</th><th>Aksi</th>
+          <th>Nama Tugas</th>
+          <th>Kategori</th>
+          <th>Deadline</th>
+          <th>Jam</th>
+          <th>Status</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
         @forelse($tugas as $t)
-        @php $isLate = $t->status !== 'Selesai' && $t->deadline->isPast(); $isNear = $t->status !== 'Selesai' && !$isLate && $t->deadline->diffInDays(now()) <= 3; @endphp
+        @php
+          $isLate = $t->status !== 'Selesai' && $t->deadline->isPast();
+          $isNear = $t->status !== 'Selesai' && !$isLate && $t->deadline->diffInDays(now()) <= 3;
+        @endphp
         <tr class="{{ $isLate ? 'row-late' : ($isNear ? 'row-near' : '') }}">
-          <td style="font-weight:600">
-            {{ $t->nama }}
+          <td>
+            <span style="font-weight:600">{{ $t->nama }}</span>
             @if($isLate)<span class="badge badge-red" style="margin-left:6px;font-size:10px">Terlambat</span>@endif
             @if($isNear)<span class="badge badge-yellow" style="margin-left:6px;font-size:10px">Segera</span>@endif
           </td>
-          <td><span class="badge {{ $t->kategori === 'S2' ? 'badge-blue' : ($t->kategori === 'Pribadi' ? 'badge-purple' : 'badge-gray') }}">{{ $t->kategori }}</span></td>
+          <td>
+            <span class="badge {{ $t->kategori === 'S2' ? 'badge-blue' : ($t->kategori === 'Pribadi' ? 'badge-purple' : 'badge-gray') }}">{{ $t->kategori }}</span>
+          </td>
           <td>{{ $t->deadline->translatedFormat('d M Y') }}</td>
-          <td><span class="badge {{ $t->status === 'Selesai' ? 'badge-green' : ($t->status === 'Sedang Dikerjakan' ? 'badge-yellow' : 'badge-red') }}">{{ $t->status }}</span></td>
+          <td>
+            @if($t->jam_mulai || $t->jam_selesai)
+              <div class="jam-badge">
+                @if($t->jam_mulai)
+                  <span class="jam-start">🕐 {{ \Carbon\Carbon::parse($t->jam_mulai)->format('H:i') }}</span>
+                @endif
+                @if($t->jam_mulai && $t->jam_selesai)
+                  <span class="jam-arrow">→</span>
+                @endif
+                @if($t->jam_selesai)
+                  <span class="jam-end">{{ \Carbon\Carbon::parse($t->jam_selesai)->format('H:i') }}</span>
+                @endif
+              </div>
+            @else
+              <span style="color:var(--g4);font-size:12px">—</span>
+            @endif
+          </td>
+          <td>
+            <span class="badge {{ $t->status === 'Selesai' ? 'badge-green' : ($t->status === 'Sedang Dikerjakan' ? 'badge-yellow' : 'badge-red') }}">{{ $t->status }}</span>
+          </td>
           <td style="display:flex;gap:6px">
             <form method="POST" action="{{ route('tugas.status', $t) }}">
               @csrf @method('PATCH')
@@ -98,7 +142,11 @@
           </td>
         </tr>
         @empty
-        <tr><td colspan="5"><div class="empty"><div class="empty-icon">📋</div><p>Belum ada tugas</p></div></td></tr>
+        <tr>
+          <td colspan="6">
+            <div class="empty"><div class="empty-icon">📋</div><p>Belum ada tugas</p></div>
+          </td>
+        </tr>
         @endforelse
       </tbody>
     </table>

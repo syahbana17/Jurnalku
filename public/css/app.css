@@ -385,3 +385,9 @@ tbody tr:hover td{background:var(--g1)}
 .fc .fc-daygrid-event{border-radius:4px!important;font-size:11px!important;padding:1px 4px!important}
 .fc .fc-col-header-cell-cushion,.fc .fc-daygrid-day-number{font-size:12px!important;font-weight:600!important;color:var(--g7)!important;text-decoration:none!important}
 .fc .fc-day-today{background:var(--blue-light)!important}
+
+/* JAM BADGE */
+.jam-badge { display:flex; align-items:center; gap:4px; font-size:12px; font-weight:600; white-space:nowrap; }
+.jam-start { color:var(--blue-dark); background:var(--blue-light); padding:2px 7px; border-radius:20px; }
+.jam-end   { color:#065f46; background:var(--green-light); padding:2px 7px; border-radius:20px; }
+.jam-arrow { color:var(--g4); font-size:11px; }
