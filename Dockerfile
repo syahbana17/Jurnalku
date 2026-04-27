@@ -12,7 +12,6 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# Install tanpa cache config (env belum ada saat build)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 RUN chown -R www-data:www-data /var/www/html \
@@ -21,6 +20,6 @@ RUN chown -R www-data:www-data /var/www/html \
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-EXPOSE 9000
+EXPOSE 8080
 
 CMD ["/start.sh"]
