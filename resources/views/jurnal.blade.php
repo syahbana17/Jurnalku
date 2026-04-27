@@ -89,17 +89,94 @@
   <div class="tbl-wrap">
     <table>
       <thead>
-        <tr><th>Tanggal</th><th>Materi</th><th>Kelas</th><th>Metode</th><th>Aksi</th></tr>
+        <tr>
+          <th>Tanggal</th>
+          <th>Materi</th>
+          <th>Kelas</th>
+          <th>Metode</th>
+          <th>Kendala</th>
+          <th>Evaluasi</th>
+          <th>Aksi</th>
+        </tr>
       </thead>
       <tbody>
         @foreach($jurnals as $j)
-        <tr>
+        {{-- Row utama --}}
+        <tr class="jurnal-row" onclick="toggleJurnalDetail({{ $j->id }})" style="cursor:pointer">
           <td>{{ $j->tanggal->translatedFormat('d M Y') }}</td>
           <td style="font-weight:600">{{ $j->materi }}</td>
           <td>{{ $j->kelas }}</td>
           <td>{{ $j->metode ?: '-' }}</td>
           <td>
-            <button class="btn btn-danger btn-xs" onclick="confirmDelete('{{ route('jurnal.destroy', $j) }}', 'Hapus jurnal ini?')">Hapus</button>
+            @if($j->kendala)
+              <span class="jurnal-preview">{{ Str::limit($j->kendala, 40) }}</span>
+            @else
+              <span style="color:var(--g4)">—</span>
+            @endif
+          </td>
+          <td>
+            @if($j->evaluasi)
+              <span class="jurnal-preview">{{ Str::limit($j->evaluasi, 40) }}</span>
+            @else
+              <span style="color:var(--g4)">—</span>
+            @endif
+          </td>
+          <td onclick="event.stopPropagation()">
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="btn-expand" id="expand-{{ $j->id }}" onclick="toggleJurnalDetail({{ $j->id }})" title="Lihat detail">▼</button>
+              <button class="btn btn-danger btn-xs" onclick="confirmDelete('{{ route('jurnal.destroy', $j) }}', 'Hapus jurnal ini?')">Hapus</button>
+            </div>
+          </td>
+        </tr>
+        {{-- Row detail (expandable) --}}
+        <tr class="jurnal-detail" id="detail-{{ $j->id }}" style="display:none">
+          <td colspan="7" style="padding:0">
+            <div class="jurnal-detail-box">
+              <div class="jurnal-detail-grid">
+
+                @if($j->kendala)
+                <div class="jurnal-detail-item">
+                  <div class="jurnal-detail-label">⚠️ Kendala yang Dihadapi</div>
+                  <div class="jurnal-detail-val">{{ $j->kendala }}</div>
+                </div>
+                @endif
+
+                @if($j->evaluasi)
+                <div class="jurnal-detail-item">
+                  <div class="jurnal-detail-label">📝 Evaluasi & Refleksi</div>
+                  <div class="jurnal-detail-val">{{ $j->evaluasi }}</div>
+                </div>
+                @endif
+
+                @if($j->matkul_s2)
+                <div class="jurnal-detail-item">
+                  <div class="jurnal-detail-label">🎓 Mata Kuliah S2</div>
+                  <div class="jurnal-detail-val">{{ $j->matkul_s2 }}</div>
+                </div>
+                @endif
+
+                @if($j->tugas_s2)
+                <div class="jurnal-detail-item">
+                  <div class="jurnal-detail-label">📚 Tugas S2</div>
+                  <div class="jurnal-detail-val">{{ $j->tugas_s2 }}</div>
+                </div>
+                @endif
+
+                @if($j->insight)
+                <div class="jurnal-detail-item" style="grid-column:1/-1">
+                  <div class="jurnal-detail-label">💡 Insight / Hal Menarik</div>
+                  <div class="jurnal-detail-val">{{ $j->insight }}</div>
+                </div>
+                @endif
+
+                @if(!$j->kendala && !$j->evaluasi && !$j->matkul_s2 && !$j->tugas_s2 && !$j->insight)
+                <div class="jurnal-detail-item" style="grid-column:1/-1">
+                  <div class="jurnal-detail-val" style="color:var(--g5);font-style:italic">Tidak ada detail tambahan.</div>
+                </div>
+                @endif
+
+              </div>
+            </div>
           </td>
         </tr>
         @endforeach
@@ -118,6 +195,15 @@
   function update(){ if(tgl.value) hari.value = days[new Date(tgl.value+'T00:00:00').getDay()]; }
   tgl.addEventListener('change', update); update();
 })();
+
+function toggleJurnalDetail(id) {
+  const row = document.getElementById('detail-' + id);
+  const btn = document.getElementById('expand-' + id);
+  if (!row) return;
+  const isOpen = row.style.display !== 'none';
+  row.style.display = isOpen ? 'none' : 'table-row';
+  if (btn) btn.textContent = isOpen ? '▼' : '▲';
+}
 </script>
 
 @include('partials.confirm-modal')

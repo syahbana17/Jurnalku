@@ -415,3 +415,44 @@ tbody tr:hover td{background:var(--g1)}
 @media(max-width:768px){
   .tugas-clock-section { grid-template-columns: 1fr; }
 }
+
+/* JURNAL EXPANDABLE */
+.jurnal-row:hover td { background: var(--g1); }
+.jurnal-preview { font-size:12.5px; color:var(--g6); }
+.btn-expand {
+  background: none; border: 1.5px solid var(--g3);
+  border-radius: 4px; cursor: pointer;
+  font-size: 10px; color: var(--g5);
+  padding: 2px 6px; transition: all .15s;
+}
+.btn-expand:hover { background: var(--g2); color: var(--g7); }
+
+.jurnal-detail td { padding: 0 !important; }
+.jurnal-detail-box {
+  background: var(--g1);
+  border-top: 2px solid var(--blue-light);
+  padding: 16px 20px;
+  animation: slideDown .2s ease-out;
+}
+.jurnal-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.jurnal-detail-item {
+  background: var(--g0);
+  border: 1px solid var(--g3);
+  border-radius: var(--r2);
+  padding: 12px 14px;
+}
+.jurnal-detail-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em;
+  color: var(--g5); margin-bottom: 6px;
+}
+.jurnal-detail-val {
+  font-size: 13px; color: var(--g8); line-height: 1.6;
+}
+@media(max-width:768px){
+  .jurnal-detail-grid { grid-template-columns: 1fr; }
+}
