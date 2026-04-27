@@ -37,7 +37,9 @@ EOF
 # Laravel setup
 php artisan key:generate --force
 php artisan config:cache
-php artisan migrate --force
+echo "=== Running migrations ==="
+php artisan migrate --force --verbose
+echo "=== Migrations done ==="
 php artisan storage:link 2>/dev/null || true
 
 echo "Starting Laravel on port ${PORT}..."
