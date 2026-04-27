@@ -391,3 +391,27 @@ tbody tr:hover td{background:var(--g1)}
 .jam-start { color:var(--blue-dark); background:var(--blue-light); padding:2px 7px; border-radius:20px; }
 .jam-end   { color:#065f46; background:var(--green-light); padding:2px 7px; border-radius:20px; }
 .jam-arrow { color:var(--g4); font-size:11px; }
+
+/* TUGAS CLOCK SECTION */
+.tugas-clock-section {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--g2);
+}
+.tugas-clock-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tugas-form-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+@media(max-width:768px){
+  .tugas-clock-section { grid-template-columns: 1fr; }
+}
