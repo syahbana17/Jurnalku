@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PORT=${PORT:-8080}
+PORT=${PORT:-3000}
 
 cd /var/www/html
 
