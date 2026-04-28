@@ -12,7 +12,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Kirim WA reminder deadline setiap hari jam 07:00 WIB (00:00 UTC)
+        $schedule->command('reminder:deadline')
+            ->dailyAt('00:00')
+            ->timezone('UTC');
     }
 
     /**
