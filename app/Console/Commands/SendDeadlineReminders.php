@@ -14,6 +14,12 @@ class SendDeadlineReminders extends Command
 
     public function handle(): void
     {
+        // Cek dulu apakah kolom whatsapp ada
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'whatsapp')) {
+            $this->info('Kolom whatsapp belum ada, skip.');
+            return;
+        }
+
         $besok = now()->addDay()->toDateString();
 
         $users = User::whereNotNull('whatsapp')
