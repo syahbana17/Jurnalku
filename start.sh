@@ -32,6 +32,8 @@ FILESYSTEM_DISK=local
 GOOGLE_CLIENT_ID="${GOOGLE_CLIENT_ID}"
 GOOGLE_CLIENT_SECRET="${GOOGLE_CLIENT_SECRET}"
 GOOGLE_REDIRECT_URI="${GOOGLE_REDIRECT_URI}"
+
+FONNTE_TOKEN="${FONNTE_TOKEN:-}"
 EOF
 
 # Laravel setup
@@ -43,5 +45,4 @@ echo "=== Migrations done ==="
 php artisan storage:link 2>/dev/null || true
 
 echo "Starting Laravel on port ${PORT}..."
-php artisan schedule:work &
 exec php artisan serve --host=0.0.0.0 --port=${PORT}
