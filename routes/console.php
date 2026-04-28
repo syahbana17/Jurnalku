@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+// Jadwalkan reminder deadline setiap hari jam 07:00 WIB (00:00 UTC)
+\Illuminate\Support\Facades\Schedule::command('reminder:deadline')
+    ->dailyAt('00:00')
+    ->timezone('Asia/Jakarta');
