@@ -480,3 +480,27 @@ tbody tr:hover td{background:var(--g1)}
 .badge-kat-sekolah { background: #3b82f6; color: #fff; font-weight: 700; }
 .badge-kat-s2      { background: #10b981; color: #fff; font-weight: 700; }
 .badge-kat-pribadi { background: #a855f7; color: #fff; font-weight: 700; }
+
+/* WA REMINDER FORM */
+.wa-form { margin: 8px 0; }
+.wa-input-wrap {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.08); border-radius: var(--r);
+  padding: 6px 10px; margin-bottom: 4px;
+}
+.wa-icon { font-size: 14px; flex-shrink: 0; }
+.wa-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-size: 12px; color: #e2e8f0; font-family: inherit;
+  min-width: 0;
+}
+.wa-input::placeholder { color: #64748b; }
+.wa-save-btn {
+  background: #10b981; border: none; border-radius: 4px;
+  color: #fff; font-size: 13px; font-weight: 700;
+  cursor: pointer; padding: 2px 8px; flex-shrink: 0;
+  transition: background .15s;
+}
+.wa-save-btn:hover { background: #059669; }
+.wa-status { font-size: 10.5px; color: #10b981; display: block; padding-left: 4px; }
+.wa-status-off { color: #f59e0b; }

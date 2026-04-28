@@ -2,29 +2,28 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\DeadlineReminder;
 use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class SendDeadlineReminders extends Command
 {
     protected $signature   = 'reminder:deadline';
-    protected $description = 'Kirim email reminder untuk tugas yang deadline besok (H-1)';
+    protected $description = 'Kirim WA reminder untuk tugas deadline besok (H-1)';
 
     public function handle(): void
     {
         $besok = now()->addDay()->toDateString();
 
-        // Ambil semua user yang punya tugas deadline besok
-        $users = User::whereHas('tugas', function ($q) use ($besok) {
-            $q->whereDate('deadline', $besok)
-              ->where('status', '!=', 'Selesai');
-        })->get();
+        $users = User::whereNotNull('whatsapp')
+            ->whereHas('tugas', function ($q) use ($besok) {
+                $q->whereDate('deadline', $besok)
+                  ->where('status', '!=', 'Selesai');
+            })->get();
 
         if ($users->isEmpty()) {
-            $this->info('Tidak ada tugas deadline besok.');
+            $this->info('Tidak ada reminder yang perlu dikirim.');
             return;
         }
 
@@ -32,21 +31,41 @@ class SendDeadlineReminders extends Command
             $tugasBesok = Tugas::where('user_id', $user->id)
                 ->whereDate('deadline', $besok)
                 ->where('status', '!=', 'Selesai')
-                ->get()
-                ->map(fn($t) => [
-                    'nama'     => $t->nama,
-                    'kategori' => $t->kategori,
-                    'deadline' => $t->deadline->translatedFormat('d F Y'),
-                    'status'   => $t->status,
-                ])->toArray();
+                ->get();
 
-            Mail::to($user->email)->send(
-                new DeadlineReminder($user->name, $tugasBesok)
-            );
+            $pesan = "⏰ *Reminder Deadline - Jurnalku*\n\n";
+            $pesan .= "Halo *{$user->name}*! 👋\n\n";
+            $pesan .= "Kamu punya *" . $tugasBesok->count() . " tugas* yang deadline-nya *besok*:\n\n";
 
-            $this->info("Email terkirim ke: {$user->email} ({$user->name}) — " . count($tugasBesok) . " tugas");
+            foreach ($tugasBesok as $i => $t) {
+                $pesan .= ($i + 1) . ". *{$t->nama}*\n";
+                $pesan .= "   📁 {$t->kategori} | 📅 {$t->deadline->translatedFormat('d F Y')}\n";
+                $pesan .= "   Status: {$t->status}\n\n";
+            }
+
+            $pesan .= "Segera selesaikan ya! 💪\n";
+            $pesan .= config('app.url') . "/tugas";
+
+            $this->sendWhatsApp($user->whatsapp, $pesan);
+            $this->info("WA terkirim ke: {$user->whatsapp} ({$user->name})");
         }
 
-        $this->info('Selesai mengirim reminder.');
+        $this->info('Selesai.');
+    }
+
+    private function sendWhatsApp(string $nomor, string $pesan): void
+    {
+        $token = config('services.fonnte.token');
+
+        if (!$token) {
+            $this->error('FONNTE_TOKEN belum diset!');
+            return;
+        }
+
+        Http::withHeaders(['Authorization' => $token])
+            ->post('https://api.fonnte.com/send', [
+                'target'  => $nomor,
+                'message' => $pesan,
+            ]);
     }
 }

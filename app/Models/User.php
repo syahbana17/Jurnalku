@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'google_id', 'avatar',
+        'name', 'email', 'password', 'google_id', 'avatar', 'whatsapp',
     ];
 
     public function tugas()

@@ -6,6 +6,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\ProgresS2Controller;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RefleksiController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\TugasController;
@@ -33,6 +34,8 @@ Route::delete('/progres/{progres}', [ProgresS2Controller::class, 'destroy'])->na
 Route::post('/semester', [SemesterController::class, 'store'])->name('semester.store');
 Route::patch('/semester/{semester}/activate', [SemesterController::class, 'activate'])->name('semester.activate');
 Route::delete('/semester/{semester}', [SemesterController::class, 'destroy'])->name('semester.destroy');
+
+Route::post('/profil/whatsapp', [ProfilController::class, 'update'])->name('profil.whatsapp');
 
 Route::get('/jurnal', [JurnalController::class, 'index'])->name('jurnal.index');
 Route::post('/jurnal', [JurnalController::class, 'store'])->name('jurnal.store');

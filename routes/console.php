@@ -18,7 +18,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Jadwalkan reminder deadline setiap hari jam 07:00 WIB (00:00 UTC)
+// Kirim WA reminder deadline setiap hari jam 07:00 WIB
 \Illuminate\Support\Facades\Schedule::command('reminder:deadline')
-    ->dailyAt('00:00')
-    ->timezone('Asia/Jakarta');
+    ->dailyAt('00:00') // 00:00 UTC = 07:00 WIB
+    ->timezone('UTC');

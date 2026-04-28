@@ -43,6 +43,5 @@ echo "=== Migrations done ==="
 php artisan storage:link 2>/dev/null || true
 
 echo "Starting Laravel on port ${PORT}..."
-# Jalankan scheduler di background
 php artisan schedule:work &
 exec php artisan serve --host=0.0.0.0 --port=${PORT}

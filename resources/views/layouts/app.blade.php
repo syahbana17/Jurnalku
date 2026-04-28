@@ -66,6 +66,25 @@
       <span class="theme-label">Mode Gelap</span>
       <span class="theme-switch" id="theme-switch"></span>
     </button>
+
+    {{-- Nomor WhatsApp untuk reminder --}}
+    <form method="POST" action="{{ route('profil.whatsapp') }}" class="wa-form">
+      @csrf
+      <div class="wa-input-wrap">
+        <span class="wa-icon">📱</span>
+        <input type="text" name="whatsapp"
+          value="{{ auth()->user()->whatsapp }}"
+          placeholder="Nomor WA (cth: 628xxx)"
+          class="wa-input">
+        <button type="submit" class="wa-save-btn" title="Simpan">✓</button>
+      </div>
+      @if(auth()->user()->whatsapp)
+        <span class="wa-status">✅ Reminder aktif</span>
+      @else
+        <span class="wa-status wa-status-off">⚠️ Isi untuk aktifkan reminder</span>
+      @endif
+    </form>
+
     <form method="POST" action="{{ route('logout') }}">
       @csrf
       <button type="submit" class="btn-logout">🚪 Keluar</button>
